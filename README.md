@@ -108,6 +108,191 @@ Operations teams can view webhook status, manually retry failed deliveries, and 
 - Instrumentation (ActiveSupport::Notifications)
 - Authentication (your application's auth system)
 
+## Project Status
+
+**Current Phase**: Phase 1 - Foundation  
+**Status**: In Progress  
+**Target Release**: v0.1.0
+
+This gem is in active development. APIs and features may change before the 1.0 release.
+
+### What's Working
+- Project structure and planning
+- Documentation framework
+
+### In Progress
+- Database schema design
+- Core model implementation
+- Basic HTTP dispatcher
+
+### Next Up
+- Background job integration
+- Simple retry logic
+- Test framework setup
+
+## Roadmap
+
+### Version Timeline
+
+#### v0.1.0 - Foundation (Weeks 1-2) - IN PROGRESS
+**Goal**: Functional webhook delivery with basic retry
+
+**Week 1**
+- Gem skeleton and gemspec configuration
+- Database migrations for core tables
+- Core models: Webhook, WebhookAttempt, WebhookEndpoint
+- Model validations and associations
+- RSpec setup with FactoryBot
+
+**Week 2**
+- Configuration class implementation
+- Basic dispatcher service with Faraday
+- ProcessWebhookJob for background delivery
+- Public enqueue API
+- Basic integration tests
+
+**Deliverable**: Working webhook delivery system
+
+---
+
+#### v0.2.0 - Reliability (Weeks 3-4) - PLANNED
+**Goal**: Production-grade retry and failure handling
+
+**Week 3**
+- Exponential backoff algorithm with jitter
+- RetryScheduler service
+- RetryFailedWebhooksJob for scheduled retries
+- Webhook status state machine
+- Error classification logic
+
+**Week 4**
+- CircuitBreaker service implementation
+- Endpoint state tracking and management
+- Circuit breaker state transitions (closed/open/half-open)
+- Timeout handling and configuration
+- Comprehensive error handling
+
+**Deliverable**: Robust retry system with circuit breakers
+
+---
+
+#### v0.3.0 - Admin UI Core (Weeks 5-6) - PLANNED
+**Goal**: Basic operational visibility
+
+**Week 5**
+- Rails Engine setup and configuration
+- Routes and authentication integration
+- WebhooksController with index and show actions
+- Basic views with pagination (Kaminari/Pagy)
+- Manual retry functionality
+
+**Week 6**
+- EndpointsController implementation
+- Circuit breaker status views
+- Search functionality across webhooks
+- Status and date filtering
+- ViewComponent integration
+
+**Deliverable**: Functional admin interface for webhook management
+
+---
+
+#### v0.4.0 - Admin UI Advanced (Weeks 7-8) - PLANNED
+**Goal**: Complete operational tooling
+
+**Week 7**
+- Dashboard controller with statistics
+- Delivery metrics aggregation
+- Chart integration (Chartkick)
+- Bulk retry interface
+- Bulk delete operations
+
+**Week 8**
+- CSV export functionality
+- Advanced filtering options
+- Date range picker integration
+- Circuit breaker manual controls
+- Real-time updates with Turbo
+
+**Deliverable**: Full-featured admin dashboard
+
+---
+
+#### v0.5.0 - Instrumentation (Weeks 9-10) - PLANNED
+**Goal**: Production monitoring and testing tools
+
+**Week 9**
+- ActiveSupport::Notifications event system
+- Structured logging implementation
+- Metrics collection hooks
+- Example monitoring integrations (Datadog, New Relic)
+
+**Week 10**
+- Test helper module for consuming apps
+- Fake mode for test environments
+- Custom RSpec matchers
+- Performance benchmarking suite
+- Load testing scenarios
+
+**Deliverable**: Complete observability and testing infrastructure
+
+---
+
+#### v1.0.0 - Production Release (Weeks 11-12) - PLANNED
+**Goal**: Public gem release with stable API
+
+**Week 11**
+- Complete README documentation
+- Wiki documentation setup
+- API reference documentation
+- Configuration guide
+- Troubleshooting guide
+- Example Rails application
+
+**Week 12**
+- Security audit and fixes
+- Performance optimization
+- CI/CD pipeline setup
+- Gem packaging and metadata
+- RubyGems.org release
+- Public announcement
+
+**Deliverable**: Production-ready 1.0.0 release
+
+---
+
+### Future Versions (Post 1.0)
+
+#### v1.1.0 - Security
+- HMAC signature generation for webhooks
+- Signature verification helpers
+- Security best practices documentation
+
+#### v1.2.0 - Advanced Features
+- Idempotency key support
+- Payload templating system
+- Custom retry schedules per webhook
+- Conditional retry based on response content
+
+#### v1.3.0 - Scale
+- Per-endpoint rate limiting
+- Multi-tenancy support
+- Table partitioning for high volume
+- Archive and retention policies
+
+#### v2.0.0 - Enterprise
+- GraphQL API for admin operations
+- Additional job adapter support
+- Webhook forwarding/proxy mode
+- Advanced analytics and reporting
+
+## Requirements
+
+- Ruby 2.7 or higher
+- Rails 6.0 or higher
+- PostgreSQL database (JSONB support required)
+- Background job processor (Sidekiq recommended)
+
 ## Planned Features
 
 ### Phase 1: Foundation
@@ -170,28 +355,6 @@ Operations teams can view webhook status, manually retry failed deliveries, and 
 - GraphQL admin API
 - Additional job adapters
 
-## Requirements
-
-- Ruby 2.7 or higher
-- Rails 6.0 or higher
-- PostgreSQL database
-- Background job processor
-
-## Project Status
-
-This gem is in active development. Current phase: Foundation.
-
-APIs and features may change before the 1.0 release. Follow the repository for updates.
-
-## Roadmap
-
-**v0.1.0** - Basic delivery and retry  
-**v0.2.0** - Circuit breakers and reliability  
-**v0.3.0** - Admin UI core  
-**v0.4.0** - Admin UI advanced features  
-**v0.5.0** - Instrumentation and testing  
-**v1.0.0** - Production release with stable API
-
 ## Documentation
 
 Documentation is organized into several resources:
@@ -251,7 +414,7 @@ MIT License. See LICENSE file for details.
 
 ## Author
 
-[Mounir Gaiby]
+Mounir Gaiby
 
 ## Links
 
