@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+class CreateWebhookRetryWebhookEndpoints < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
+  def change
+    create_table :webhook_retry_webhook_endpoints do |t|
+      t.string :url, null: false
+      t.string :host, null: false
+      t.string :circuit_state, default: "closed", null: false
+      t.integer :failure_count, default: 0, null: false
+      t.integer :success_count, default: 0, null: false
+      t.datetime :circuit_opened_at
+      t.datetime :last_failure_at
+      t.datetime :last_success_at
+
+      t.timestamps
+    end
+
+    add_index :webhook_retry_webhook_endpoints, :url, unique: true
+    add_index :webhook_retry_webhook_endpoints, :host
+    add_index :webhook_retry_webhook_endpoints, :circuit_state
+  end
+end

@@ -1,0 +1,116 @@
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.7
+  NewCops: enable
+  Exclude:
+    - "bin/**/*"
+    - "vendor/**/*"
+    - "spec/dummy/db/schema.rb"
+    - "spec/tmp/**/*"
+    - "lib/generators/**/templates/**/*"
+
+# Layout
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - "spec/**/*"
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# Metrics - be lenient
+Metrics/AbcSize:
+  Max: 35
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/MethodLength:
+  Max: 25
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/ParameterLists:
+  Max: 8
+
+# Style
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+# Gemspec
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+Gemspec/RequireMFA:
+  Enabled: false
+
+# Lint
+Lint/EmptyBlock:
+  Exclude:
+    - "spec/dummy/config/routes.rb"
+
+# Rails
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/ApplicationRecord:
+  Enabled: false
+
+# RSpec
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/webhook_retry/enqueue_spec.rb"
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/MultipleDescribes:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false

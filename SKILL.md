@@ -58,10 +58,18 @@ cd spec/dummy && bundle exec rails g webhook_retry:install
 
 ## /lint
 
-Run Ruby linter (when configured).
+Run RuboCop linter.
 
 ```bash
 bundle exec rubocop
+```
+
+## /lint-fix
+
+Run RuboCop with auto-fix.
+
+```bash
+bundle exec rubocop -A
 ```
 
 ## /deps

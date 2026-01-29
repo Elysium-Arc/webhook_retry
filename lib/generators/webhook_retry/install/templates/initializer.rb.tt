@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+WebhookRetry.configure do |config|
+  # The queue name for webhook processing jobs
+  # config.job_queue = :webhooks
+
+  # HTTP connection timeout in seconds
+  # config.http_open_timeout = 5
+
+  # HTTP read timeout in seconds
+  # config.http_read_timeout = 30
+
+  # Default maximum number of delivery attempts
+  # config.default_max_attempts = 5
+
+  # HTTP status codes considered successful
+  # config.success_codes = (200..299).to_a
+end
