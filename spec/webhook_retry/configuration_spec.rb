@@ -25,6 +25,32 @@ RSpec.describe WebhookRetry::Configuration do
     it "has default success_codes of 200-299" do
       expect(config.success_codes).to eq((200..299).to_a)
     end
+
+    # Phase 2: Retry configuration
+    it "has default retry_base_delay of 60 seconds" do
+      expect(config.retry_base_delay).to eq(60)
+    end
+
+    it "has default max_retry_delay of 3600 seconds" do
+      expect(config.max_retry_delay).to eq(3600)
+    end
+
+    it "has default retry_jitter_factor of 0.5" do
+      expect(config.retry_jitter_factor).to eq(0.5)
+    end
+
+    # Phase 2: Circuit breaker configuration
+    it "has default circuit_breaker_threshold of 5" do
+      expect(config.circuit_breaker_threshold).to eq(5)
+    end
+
+    it "has default circuit_breaker_timeout of 300 seconds" do
+      expect(config.circuit_breaker_timeout).to eq(300)
+    end
+
+    it "has circuit_breaker_enabled true by default" do
+      expect(config.circuit_breaker_enabled).to be true
+    end
   end
 
   describe "setters" do
@@ -51,6 +77,38 @@ RSpec.describe WebhookRetry::Configuration do
     it "allows setting success_codes" do
       config.success_codes = [200, 201, 202]
       expect(config.success_codes).to eq([200, 201, 202])
+    end
+
+    # Phase 2: Retry setters
+    it "allows setting retry_base_delay" do
+      config.retry_base_delay = 30
+      expect(config.retry_base_delay).to eq(30)
+    end
+
+    it "allows setting max_retry_delay" do
+      config.max_retry_delay = 7200
+      expect(config.max_retry_delay).to eq(7200)
+    end
+
+    it "allows setting retry_jitter_factor" do
+      config.retry_jitter_factor = 0.25
+      expect(config.retry_jitter_factor).to eq(0.25)
+    end
+
+    # Phase 2: Circuit breaker setters
+    it "allows setting circuit_breaker_threshold" do
+      config.circuit_breaker_threshold = 10
+      expect(config.circuit_breaker_threshold).to eq(10)
+    end
+
+    it "allows setting circuit_breaker_timeout" do
+      config.circuit_breaker_timeout = 600
+      expect(config.circuit_breaker_timeout).to eq(600)
+    end
+
+    it "allows setting circuit_breaker_enabled" do
+      config.circuit_breaker_enabled = false
+      expect(config.circuit_breaker_enabled).to be false
     end
   end
 end

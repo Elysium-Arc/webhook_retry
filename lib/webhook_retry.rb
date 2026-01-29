@@ -3,6 +3,10 @@
 require_relative "webhook_retry/version"
 require_relative "webhook_retry/configuration"
 require_relative "webhook_retry/services/dispatcher"
+require_relative "webhook_retry/services/retry_calculator"
+require_relative "webhook_retry/services/circuit_breaker"
+require_relative "webhook_retry/services/retry_scheduler"
+require_relative "webhook_retry/services/error_classifier"
 
 module WebhookRetry
   class Error < StandardError; end

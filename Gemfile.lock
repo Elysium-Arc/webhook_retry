@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    webhook_retry (0.1.0)
+    webhook_retry (0.2.0)
       faraday (>= 1.0)
       rails (>= 6.0)
 

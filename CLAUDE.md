@@ -23,35 +23,49 @@ WebhookRetry provides battle-tested webhook infrastructure as a Rails gem. Insta
 
 ## Current State
 
-**Phase**: Phase 1 - Foundation
-**Version**: v0.1.0
+**Phase**: Phase 2 - Reliability
+**Version**: v0.2.0
 **Status**: Complete
 
 ### What's Implemented
+
+**Phase 1 - Foundation:**
 - Gem skeleton (gemspec, Gemfile, Rakefile)
 - Rails Engine with isolated namespace (`WebhookRetry::Engine`)
 - Configuration system (`WebhookRetry.configure`)
-- Core models:
-  - `WebhookRetry::WebhookEndpoint` - URL validation, host extraction
-  - `WebhookRetry::Webhook` - Status state machine, deliverable checks
-  - `WebhookRetry::WebhookAttempt` - Delivery audit trail
-- HTTP Dispatcher service (`WebhookRetry::Dispatcher`)
+- Core models: WebhookEndpoint, Webhook, WebhookAttempt
+- HTTP Dispatcher service
 - ProcessWebhookJob for background delivery
 - Public API (`WebhookRetry.enqueue`)
 - Install generator with migration templates
-- Full test suite (138 tests passing)
+
+**Phase 2 - Reliability:**
+- Exponential backoff with jitter (`RetryCalculator`)
+- Circuit breaker pattern (`CircuitBreaker`)
+- Retry scheduling (`RetryScheduler`)
+- Scheduled retry job (`RetryFailedWebhooksJob`)
+- Error classification (retryable vs permanent)
+- Comprehensive error handling in ProcessWebhookJob
+- Full test suite (239 tests passing)
 
 ### Files Structure
 ```
-lib/webhook_retry.rb                    # Main entry, public API
-lib/webhook_retry/version.rb            # VERSION = "0.1.0"
-lib/webhook_retry/configuration.rb      # Config DSL
-lib/webhook_retry/engine.rb             # Rails Engine
-lib/webhook_retry/services/dispatcher.rb # HTTP delivery
-app/models/webhook_retry/*.rb           # 3 models
-app/jobs/webhook_retry/*.rb             # ProcessWebhookJob
-lib/generators/webhook_retry/install/   # Install generator
-spec/                                   # Test suite
+lib/webhook_retry.rb                           # Main entry, public API
+lib/webhook_retry/version.rb                   # VERSION
+lib/webhook_retry/configuration.rb             # Config DSL (Phase 1 + 2 options)
+lib/webhook_retry/engine.rb                    # Rails Engine
+lib/webhook_retry/services/
+  ├── dispatcher.rb                            # HTTP delivery
+  ├── retry_calculator.rb                      # Exponential backoff + jitter
+  ├── circuit_breaker.rb                       # Circuit breaker pattern
+  ├── retry_scheduler.rb                       # Schedule retries
+  └── error_classifier.rb                      # Classify errors
+app/models/webhook_retry/*.rb                  # 3 models
+app/jobs/webhook_retry/
+  ├── process_webhook_job.rb                   # Main delivery job
+  └── retry_failed_webhooks_job.rb             # Periodic retry job
+lib/generators/webhook_retry/install/          # Install generator
+spec/                                          # Test suite (239 tests)
 ```
 
 ---

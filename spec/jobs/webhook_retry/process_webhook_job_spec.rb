@@ -124,6 +124,101 @@ RSpec.describe WebhookRetry::ProcessWebhookJob, type: :job do
         expect { described_class.perform_now(-1) }.not_to raise_error
       end
     end
+
+    # Phase 2: Circuit breaker integration
+    context "when circuit breaker is open" do
+      let(:endpoint) { create(:webhook_endpoint, circuit_state: "open", circuit_opened_at: 1.minute.ago) }
+      let(:webhook) { create(:webhook, url: "https://example.com/webhook", webhook_endpoint: endpoint) }
+
+      it "does not attempt delivery" do
+        expect(WebhookRetry::Dispatcher).not_to receive(:new)
+
+        described_class.perform_now(webhook.id)
+      end
+
+      it "does not change webhook status" do
+        described_class.perform_now(webhook.id)
+
+        expect(webhook.reload.status).to eq("pending")
+      end
+
+      it "schedules retry for later" do
+        described_class.perform_now(webhook.id)
+
+        expect(webhook.reload.scheduled_at).to be_present
+      end
+    end
+
+    # Phase 2: Retry scheduling
+    context "when delivery fails with retryable error" do
+      before do
+        stub_request(:post, "https://example.com/webhook")
+          .to_return(status: 503)
+      end
+
+      it "schedules retry with exponential backoff" do
+        described_class.perform_now(webhook.id)
+
+        expect(webhook.reload.scheduled_at).to be_present
+        expect(webhook.reload.scheduled_at).to be > Time.current
+      end
+    end
+
+    # Phase 2: Permanent failure handling
+    context "when delivery fails with permanent error (4xx)" do
+      before do
+        stub_request(:post, "https://example.com/webhook")
+          .to_return(status: 404, body: "Not Found")
+      end
+
+      it "marks webhook as dead immediately" do
+        described_class.perform_now(webhook.id)
+
+        expect(webhook.reload.status).to eq("dead")
+      end
+
+      it "does not schedule retry" do
+        described_class.perform_now(webhook.id)
+
+        expect(webhook.reload.scheduled_at).to be_nil
+      end
+    end
+
+    # Phase 2: Circuit breaker records success/failure
+    context "with circuit breaker recording" do
+      context "on success" do
+        before do
+          stub_request(:post, "https://example.com/webhook")
+            .to_return(status: 200)
+        end
+
+        it "records success on circuit breaker" do
+          endpoint = webhook.webhook_endpoint
+          endpoint.update!(circuit_state: "half_open", failure_count: 3)
+
+          described_class.perform_now(webhook.id)
+
+          expect(endpoint.reload.circuit_state).to eq("closed")
+          expect(endpoint.reload.failure_count).to eq(0)
+        end
+      end
+
+      context "on failure" do
+        let(:endpoint) { create(:webhook_endpoint, failure_count: 4) }
+        let(:webhook) { create(:webhook, url: "https://example.com/webhook", webhook_endpoint: endpoint) }
+
+        before do
+          stub_request(:post, "https://example.com/webhook")
+            .to_return(status: 500)
+        end
+
+        it "may open circuit when threshold reached" do
+          described_class.perform_now(webhook.id)
+
+          expect(endpoint.reload.circuit_state).to eq("open")
+        end
+      end
+    end
   end
 
   describe "job configuration" do

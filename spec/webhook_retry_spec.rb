@@ -13,8 +13,8 @@ RSpec.describe WebhookRetry do
       expect(WebhookRetry::VERSION).to match(/\A\d+\.\d+\.\d+/)
     end
 
-    it "is 0.1.0 for the initial release" do
-      expect(WebhookRetry::VERSION).to eq("0.1.0")
+    it "is 0.2.0 for Phase 2 release" do
+      expect(WebhookRetry::VERSION).to eq("0.2.0")
     end
   end
 
